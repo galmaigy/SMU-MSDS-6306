@@ -1,0 +1,93 @@
+---
+title: "homework3_"
+author: "sangrae cho"
+date: "5/21/2019"
+output: html_document
+---
+## Github cloning
+
+*creating a folder name: [00]gitTest  
+*$ git init   
+*$ git remote add origin   https://github.com/awesomedata/awesome-public-datasets.git  
+*$ git pull origin master  
+
+*OR
+
+*cd ~/Document/doing_data_science/[00]gitTest
+
+*git clone https://github.com/awesomedata/awesome-public-datasets.git
+
+
+## DATA summary a-b
+```{r echo=TRUE}
+setwd("C:/Users/sxc0126/Documents/R")
+tit<-read.csv("titanic.csv",header=TRUE)
+tit_tb<-table(tit$Sex)
+barplot(tit_tb,ylim=c(0,700),main="female vs male in titanic",xlab="sex", ylab="count",col=c("blue", "red"))
+text(0.7,350,"n=314")
+text(1.85,650,"n=577")
+```
+
+## DATA summary c, using apply
+```{r echo=TRUE}
+tapply(tit$Fare,tit$Survived,mean)
+```
+
+## Function Building a
+```{r echo=TRUE}
+setwd("C:/Users/sxc0126/Documents/R")
+sleep<-read.csv("sleep_data.csv", header=TRUE)
+median_Age<-median(sleep$Age,na.rm=TRUE)
+min_Duration<-min(sleep$Duration,na.rm=TRUE)
+max_Duration<-max(sleep$Duration,na.rm=TRUE)
+#mean(sleep$RSES,na.rm=TRUE) is causing error like:
+#Error in mean(sleep$RSES, na.rm = TRUE) : unused argument (na.rm = TRUE), Can you explain? 
+sleep_RSES<-na.omit(sleep$RSES)
+mean_sleep<-mean(sleep_RSES)
+sd_sleep<-sd(sleep$RSES,na.rm=TRUE)
+```
+
+## Function building b-c-d-e
+```{r echo=TRUE}
+report<-data.frame(median_Age,mean_sleep/5,sd_sleep/5,max_Duration-min_Duration)
+colnames(report)=c("MedianAge","SelfEsteem","SE_SD","DurationRange")
+report<-round(report,2)
+#showing output
+report
+
+```
+
+## 4-a Install package
+```{r echo=TRUE}
+#install.packages("fivethirtyeight") already installed
+```
+
+## 4-b c d List of package, more detial with URL, sturcture
+```{r echo=TRUE}
+library(fivethirtyeight)
+data(college_recent_grads)
+df<-college_recent_grads
+#http://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+str(df)
+```
+## 5-a, b, c, d
+```{r echo=TRUE}
+colnames(df)
+ncol(df)
+library(dplyr)
+major_count <- df %>%
+group_by(major_category) %>%
+summarise(count = n())
+# or library(sqldf)
+# major_count<-dqldf("select major_category, count(*) as count from df group by major_category")
+
+par(las=2)
+barplot(major_count$count, names=major_count$major_category, xlab="majors", main="Totals by Recent Major", horiz = TRUE, col = 'lightgreen')
+
+write.csv(college_all_ages, file = "college_all_age.csv", row.names =FALSE)
+#dir()
+#[1] "college_all_age.csv"
+
+```
+
+
