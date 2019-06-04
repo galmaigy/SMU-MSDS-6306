@@ -44,5 +44,7 @@ top10Girl<-top10Girl[,-c(2:5)]
 write.csv(top10Girl,file = "top10Gril.csv", row.names = FALSE)
 Top10Girl<-read.csv("top10Gril.csv")
 Top10Girl
-```
 
+```
+# you can find my homework here
+https://github.com/galmaigy/SMU-MSDS-6306/tree/master/homework5
