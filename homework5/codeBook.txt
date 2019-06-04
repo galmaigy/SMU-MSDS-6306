@@ -1,0 +1,79 @@
+## Top0Girl Codebook
+
+
+
+# Purpose
+
+ 5th assignment from SMU's Data Science class (Week 5, 2019)
+
+
+
+# Files
+
+Within the repository one should find the following files
+
+
+- yob2015.txt
+
+  - This file contains raw data for the names and the number of times the name was given to a newborn in 2015
+
+- yob2016
+
+  - This file contains raw data for the names and the number of times the name was given to a newborn in 2015
+
+- Top10Girl.csv
+
+  - This file contains the top 10 girl names from 2015 and 2016 conbined
+
+- Hw5_babyName_SangraeCho.Rmd
+
+  - Explains the necessary steps to clean and merge yob2015 and yob2016 and returning the final Top10Girl file
+
+
+
+# Source
+
+yob2015.txt and yob 2016.txt were provided by the professor
+
+Top10Girl.csv and Hw5_babyName_SangraeCho.Rmd were produced from those files
+
+
+
+#Variables
+
+- yob2015 does not have variables, but the following were created within R:
+
+  - firstName is the name given to the child
+
+  - gender identifies the sex of the child
+
+  - counts provides the number of times the name was given in 2015
+
+
+
+- yob2016 does not have variables, but the following were created within R:
+
+  - firstName is the name given to the child
+
+  - gender identifies the sex of the child
+
+  - counts provides the number of times the name was given in 2016
+
+  
+
+- Top10Girls.csv
+
+  - firstName provides the name given to the child
+
+  - Total provides the numbe rof times the name was given in 2015 and 2016 and are arranged in descending order
+
+
+
+
+# Implementation of R code
+
+
+
+R was used throughout this project to clean and merge data sets to arrive at final file for this assignement
+
+It allowed for the identification of a duplicate entry that was mispelled and loaded the final file to the directory that was determined

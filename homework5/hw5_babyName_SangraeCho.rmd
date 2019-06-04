@@ -1,0 +1,48 @@
+---
+title: "HW5_babyName_Sangrae_cho_"
+author: "sangrae cho"
+date: "6/4/2019"
+output: html_document
+---
+##1. data cleaning
+```{r echo=TRUE}
+#load files
+setwd("C:/Users/sxc0126/Documents/R")
+#assign as df
+df<-read.table("yob2016.txt",sep=";", header = FALSE)
+#name change
+names(df)<-c("firstName","gender","counts")
+str(df)
+summary(df)
+attach(df)
+grep("yyy$",firstName)
+# remove data of misspelled found at 212 row
+y2016<-df[-212,]
+#check the data
+y2016[210:214,]
+```
+##2.Data merging
+```{r echo=TRUE}
+setwd("C:/Users/sxc0126/Documents/R")
+y2015<-read.table("yob2015.txt",sep=",", header = FALSE)
+names(y2015)<-c("firstName","gender","counts")
+tail(y2015)
+final<-merge(y2016,y2015, all=FALSE, by = "firstName")
+#check NA values
+apply(final, 2, function(x) any(is.na(x)))
+total<-c(final$counts.x+final$counts.y)
+final$Total<-total
+#sum of Total
+sum(final$Total)
+library(dplyr)
+final<-arrange(final,-Total)
+head(final)
+finalWoman<-subset(final,gender == "F")
+head(finalWoman)
+top10Girl<-finalWoman[1:10,]
+top10Girl<-top10Girl[,-c(2:5)]
+write.csv(top10Girl,file = "top10Gril.csv", row.names = FALSE)
+Top10Girl<-read.csv("top10Gril.csv")
+Top10Girl
+```
+

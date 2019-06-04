@@ -1,0 +1,108 @@
+---
+title: "homework_4_cast of H"
+author: "sangrae cho"
+date: "5/28/2019"
+output: html_document
+---
+
+## 1. Harry Potter Cast
+##  1- a, b c) Review the data and Scrape the page into R and clean the table
+``` {r echo = TRUE}
+#copy url, use rvest, read html
+url<-"https://www.imdb.com/title/tt1201607/fullcredits?ref_=tt_ql_1"
+library(tidyverse)
+library(rvest)
+h<-read_html(url)
+
+#checking the class
+class(h) 
+#not informative
+
+#extract the tables from the html code
+tab <-html_nodes(h,"table")
+# or tab <- h %>% html_nodes("table") 
+
+#check tab
+tab
+#found the cast_list from [3]
+
+#convert HTML table into data frames
+cast <-tab[[3]] %>% html_table
+
+#setnames to have a usable data table and adding intuitive column names
+cast.setnames<-cast %>% setNames(c("noname","actor","noname2","charactor"))
+# or names(cast)=c("noname","actor","noname2","charactor")
+cast1<-cast.setnames
+head(cast1)
+
+#remove blank and 93th row
+cast2<-cast1[,-c(1,3)]
+cast2<-cast2[-c(1,93),] #or cast2<-cast2[-93,]
+
+#split the name into two column
+cast3<-cast2 %>% separate(actor, c("firstName", "lastName"))
+
+# delete "\n"
+cast3$charactor<-str_remove_all(cast3$charactor,"\n")
+head(cast3)
+
+```
+
+## 2. SportsBall
+##  2-a,b,c Shooting statistics, scrape the data, clean up
+```{r echo=TRUE}
+url_s<-"http://www.espn.com/nba/team/stats/_/name/sa/san-antonio-spurs"
+library(XML)
+#read in HTML data
+tbls_xml<-read_html(url_s)
+typeof(tbls_xml)
+length(tbls_xml)
+#only parse the table interested in
+shooting<-readHTMLTable(url_s, which = c(5))
+
+##clean the data
+#add new column
+shooting1<-add_column(shooting, new=NA, .before = "V1")
+#copy V1 column to use player names and apply to newColumn
+shooting1$new<-shooting1$V1
+#rename the header
+names(shooting1) = c("Name",  "FGM",  "FGA","FG%", "3PM",  "3PA" ,  "3P%",  "FTM",  "FTA",  "FT%",  "2PM",  "2PA",  "2P%", "SC-EFF", "SH-EFF")
+#copy player names
+shooting1$Name[19:32]<-shooting1$FGM[3:16]
+#delete row 1~18 no need to keep, clean the name
+
+shooting2<-shooting1[-c(1:18),]
+str(shooting2)
+shooting2<-shooting2[-14,]
+shooting2$Name<-str_replace(shooting2$Name,"Walker IV", "WalkerIV")
+
+#separate names into F, L, P
+shooting3<-shooting2 %>% separate(Name, c("FirstName","LastName","Position"))
+#unite the names as one column
+shooting4<-unite(shooting3,Name, c(FirstName,LastName))
+#converting to numeric of all
+indx<-sapply(shooting4, is.factor)
+shooting4[indx]<-lapply(shooting4[indx], function(x) as.numeric(as.character(x)))
+#checking datatype
+str(shooting4)
+#barplot prep
+x<-shooting4$`FG%`
+y<-shooting4$Name
+legend<-unique(shooting4$Position)
+
+```
+``` {r}
+par(mar=c(5,12,3,3))
+
+barplot(x, names=y,
+        xlab="FG%",
+        main = "Spurs player field goal %",
+        xlim = c(0,80),
+        horiz = TRUE,
+        las=2,
+        legend = legend,
+        beside =TRUE,
+        col = c(1,2,3,4,1,2,1,3,4,5,4,1,4))
+```
+
+
